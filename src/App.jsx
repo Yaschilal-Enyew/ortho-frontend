@@ -8,6 +8,10 @@ import Login from "./pages/Login";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import { ToastContainer } from 'react-toastify'
+import Courses from "./pages/Courses";
+import CourseDetail from "./pages/CourseDetail";
+import Quize from "./pages/Quize";
+
 
 export default function App() {
   return (
@@ -26,6 +30,9 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/courses" element={<Courses />} />
+          <Route path="/courses/:id" element={<CourseDetail />} />
+          <Route path="/:lessonId/quizzes" element={<Quize />} />
         </Routes>
       </div>
     </>

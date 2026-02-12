@@ -1,41 +1,62 @@
-import React from "react";
+import React, { useContext } from "react";
 import { FaFacebookF, FaInstagram, FaYoutube, FaTiktok } from "react-icons/fa";
+import { Sparkles } from "lucide-react";
+import { NewsContext } from "../context/newsContext";
 
 export default function Footer() {
-  return (
-    <footer className="relative bg-gradient-to-b from-black via-gray-900 to-black text-yellow-300 py-10 mt-0 shadow-[0_-10px_30px_rgba(255,223,71,0.15)]">
-      {/* Top soft glow to blend with contact section */}
-      <div className="absolute -top-6 left-0 right-0 h-8 bg-gradient-to-b from-yellow-400/20 to-transparent blur-md opacity-50"></div>
+  const { language } = useContext(NewsContext);
 
-      <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-        {/* Left Section */}
-        <div className="text-sm text-center md:text-left leading-relaxed">
-          <p className="text-yellow-400 font-semibold text-lg">Orthodox Student Platform</p>
-          <p className="text-gray-400 text-sm">
-            Empowering faith, unity, and growth among Orthodox students.
-          </p>
-          <p className="text-xs text-gray-500 mt-1">
-            &copy; {new Date().getFullYear()} Orthodox Student Platform — All Rights Reserved.
-          </p>
+  const content = {
+    EN: {
+      title: "Orthodox Student Platform",
+      tagline: "Empowering faith, unity, and growth among Orthodox students.",
+      rights: "All Rights Reserved",
+      links: ["Home", "About", "Contact"],
+      heritage: "SPIRITUAL HERITAGE • CAMPUS UNITY"
+    },
+    AM: {
+      title: "ኦርቶዶክሳዊ የተማሪዎች መድረክ",
+      tagline: "በኦርቶዶክሳዊያን ተማሪዎች መካከል እምነትን፣ አንድነትን እና እድገትን ማጠናከር።",
+      rights: "መብቱ በህግ የተጠበቀ ነው",
+      links: ["መነሻ", "ስለ እኛ", "ያግኙን"],
+      heritage: "መንፈሳዊ ቅርስ • የተማሪዎች አንድነት"
+    }
+  };
+
+  const t = content[language];
+
+  return (
+    <footer className="relative bg-[#1A1614] text-[#D4AF37] py-20 overflow-hidden border-t border-[#D4AF37]/30">
+      {/* Premium Ambient Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent shadow-[0_0_25px_#D4AF37]"></div>
+      
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        
+        {/* Top Decorative Row - LARGE TEXT */}
+        <div className="flex justify-center mb-14">
+          <div className="flex items-center gap-6">
+             <div className="h-px w-16 bg-[#D4AF37]/30"></div>
+             <span className="text-lg md:text-2xl font-black uppercase tracking-[0.5em] text-[#D4AF37] whitespace-nowrap drop-shadow-md">
+               {t.heritage}
+             </span>
+             <div className="h-px w-16 bg-[#D4AF37]/30"></div>
+          </div>
         </div>
 
-        {/* Right Section - Navigation + Socials */}
-        <div className="flex flex-col items-center md:items-end gap-3">
-          {/* Links */}
-          <div className="flex gap-5">
-            <a href="#home" className="hover:text-yellow-400 transition">
-              Home
-            </a>
-            <a href="#about" className="hover:text-yellow-400 transition">
-              About
-            </a>
-            <a href="#contact" className="hover:text-yellow-400 transition">
-              Contact
-            </a>
+        <div className="flex flex-col lg:flex-row justify-between items-center gap-16">
+          
+          {/* Left Section: Branding - LARGER TITLES */}
+          <div className="text-center lg:text-left">
+            <h2 className={`text-4xl md:text-5xl font-black mb-5 tracking-tighter text-white drop-shadow-lg ${language === 'AM' ? 'font-sans' : 'font-serif italic'}`}>
+              {t.title}
+            </h2>
+            <p className="text-[#D4AF37]/80 font-bold max-w-md mx-auto lg:mx-0 leading-relaxed text-xl italic">
+              {t.tagline}
+            </p>
           </div>
 
-          {/* Social Icons */}
-          <div className="flex gap-4 mt-2">
+          {/* Center Section: Social Icons - SLIGHTLY LARGER */}
+          <div className="flex gap-6">
             {[
               { Icon: FaFacebookF, link: "https://facebook.com" },
               { Icon: FaInstagram, link: "https://instagram.com" },
@@ -47,17 +68,47 @@ export default function Footer() {
                 href={link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 rounded-full bg-yellow-400/10 border border-yellow-500 hover:bg-yellow-400 hover:text-black transition-all duration-300 hover:scale-125"
+                className="group relative p-5 rounded-2xl bg-white/5 border border-[#D4AF37]/20 hover:border-[#D4AF37] transition-all duration-500 hover:-translate-y-2"
               >
-                <Icon className="text-lg" />
+                <div className="absolute inset-0 bg-[#D4AF37] opacity-0 group-hover:opacity-100 rounded-2xl transition-opacity duration-500 shadow-[0_0_20px_rgba(212,175,55,0.4)]"></div>
+                <Icon className="relative z-10 text-2xl group-hover:text-[#1A1614] transition-colors" />
               </a>
             ))}
+          </div>
+
+          {/* Right Section: Navigation - LARGE BOLD LINKS */}
+          <div className="flex flex-col items-center lg:items-end gap-8">
+            <div className="flex flex-wrap justify-center gap-10 text-lg md:text-xl font-black uppercase tracking-[0.3em]">
+              {t.links.map((link, idx) => (
+                <a 
+                  key={idx} 
+                  href={`#${['home', 'about', 'contact'][idx]}`} 
+                  className="hover:text-white transition-colors relative group"
+                >
+                  {link}
+                  <span className="absolute -bottom-2 left-0 w-0 h-1 bg-white group-hover:w-full transition-all duration-500 rounded-full"></span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar - LARGER SECONDARY TEXT */}
+        <div className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-sm font-black uppercase tracking-[0.3em] text-[#D4AF37]/50">
+          <p>
+            &copy; {new Date().getFullYear()} {t.title} — {t.rights}
+          </p>
+          <div className="flex items-center gap-3">
+            <Sparkles size={18} />
+            <span className="text-white/60">Excellence in Service</span>
+            <Sparkles size={18} />
           </div>
         </div>
       </div>
 
-      {/* Bottom Decorative Line */}
-      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-yellow-500 via-yellow-300 to-yellow-500 opacity-40"></div>
+      {/* Subtle Side Glows */}
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#D4AF37]/5 rounded-full blur-[120px]"></div>
+      <div className="absolute top-0 right-0 w-80 h-80 bg-[#D4AF37]/5 rounded-full blur-[120px]"></div>
     </footer>
   );
 }

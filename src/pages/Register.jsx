@@ -1,11 +1,13 @@
 import React, { useState, useContext } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import heroImage from "../assets/orthodox.png";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { NewsContext } from "../context/newsContext";
+import { UserPlus, BookOpen, Phone, Mail, Lock, User, GraduationCap, Sparkles, Languages } from "lucide-react";
 
 export default function Register() {
+  const [lang, setLang] = useState("EN"); // Language state
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -15,8 +17,49 @@ export default function Register() {
     phone: "",
   });
 
-  // Get context values
   const { setToken, backendUrl, navigate } = useContext(NewsContext);
+
+  // Translation Object
+  const texts = {
+    EN: {
+      title: "Join the",
+      subtitle: "Fellowship",
+      badge: "Create Student Account",
+      name: "Full Name",
+      email: "Email Address",
+      pass: "Password",
+      dept: "Department",
+      year: "Year",
+      phone: "Phone Number",
+      btn: "Confirm Registration",
+      footer: "Already a member?",
+      link: "Sign In",
+      heroTitle: "Faith &",
+      heroSub: "Scholarship",
+      heroDesc: "Join a sacred community dedicated to spiritual growth and academic excellence.",
+      success: "Registration Successful"
+    },
+    AM: {
+      title: "ቤተሰቡን",
+      subtitle: "ይቀላቀሉ",
+      badge: "የተማሪ አካውንት ይፍጠሩ",
+      name: "ሙሉ ስም",
+      email: "ኢሜይል",
+      pass: "የይለፍ ቃል",
+      dept: "የትምህርት ክፍል",
+      year: "ዓመት",
+      phone: "ስልክ ቁጥር",
+      btn: "ምዝገባውን አረጋግጥ",
+      footer: "አባል ነዎት?",
+      link: "ይግቡ",
+      heroTitle: "ሃይማኖትና",
+      heroSub: "እውቀት",
+      heroDesc: "ለመንፈሳዊ እድገትና ለአካዳሚክ ብቃት የተተጋ ቅዱስ ማህበረሰብን ይቀላቀሉ::",
+      success: "ምዝገባው ተሳክቷል"
+    }
+  };
+
+  const t = texts[lang];
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -25,11 +68,8 @@ export default function Register() {
     e.preventDefault();
     try {
       const response = await axios.post(`${backendUrl}/user/register`, form);
-
       if (response.data.success) {
-        toast.success("Registered Successfully");
-
-        // Optional: auto-login after registration
+        toast.success(t.success);
         const userToken = response.data.token;
         if (userToken) {
           setToken(userToken);
@@ -37,7 +77,7 @@ export default function Register() {
           axios.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
           navigate("/");
         } else {
-          navigate("/login"); // If backend doesn’t send token, go to login
+          navigate("/login");
         }
       } else {
         toast.error(response.data.message);
@@ -48,79 +88,110 @@ export default function Register() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-br from-black via-gray-900 to-yellow-100">
-      {/* LEFT SIDE — FORM */}
+    <div className="flex flex-col md:flex-row min-h-screen bg-[#050505] overflow-hidden selection:bg-amber-500/30 font-sans">
+      
+      {/* LEFT SIDE — AUTHENTICATION FORM */}
       <motion.div
-        className="flex-1 flex items-center justify-center p-8 order-2 md:order-1"
-        initial={{ x: -80, opacity: 0 }}
+        className="flex-1 flex items-center justify-center p-6 md:p-12 order-2 md:order-1 relative"
+        initial={{ x: -50, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8 }}
       >
-        <div className="w-full max-w-md bg-white/10 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-yellow-400/40">
-          <h2 className="text-3xl md:text-4xl font-bold text-yellow-400 mb-8 text-center">
-            Student Registration
-          </h2>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-amber-600/10 blur-[100px] rounded-full -z-10" />
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="w-full max-w-lg bg-[#0D0D0D] border border-white/5 p-10 md:p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+          
+          {/* --- LANGUAGE TOGGLE --- */}
+          <div className="absolute top-6 right-8 z-20">
+            <button 
+              onClick={() => setLang(lang === "EN" ? "AM" : "EN")}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-amber-500 hover:bg-white/10 transition-all active:scale-95"
+            >
+              <Languages size={14} />
+              <span className="text-[10px] font-black tracking-widest uppercase">{lang === "EN" ? "አማርኛ" : "English"}</span>
+            </button>
+          </div>
+
+          <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+
+          <div className="text-center mb-10">
+            <div className="inline-flex p-3 bg-amber-500/10 rounded-2xl mb-4 border border-amber-500/20">
+              <UserPlus className="text-amber-500" size={28} />
+            </div>
+            <h2 className="text-3xl font-black text-white uppercase tracking-tight">
+              {t.title} <span className="text-amber-500 font-light italic">{t.subtitle}</span>
+            </h2>
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mt-2">{t.badge}</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {[
-              { name: "name", type: "text", placeholder: "Full Name" },
-              { name: "email", type: "email", placeholder: "Email" },
-              { name: "password", type: "password", placeholder: "Password" },
-              { name: "year", type: "number", placeholder: "Year of Study" },
-              { name: "department", type: "text", placeholder: "Department" },
-              { name: "phone", type: "number", placeholder: "Phone Number" },
-            ].map(({ name, type, placeholder }) => (
-              <motion.div
-                key={name}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-              >
-                <input
-                  name={name}
-                  type={type}
-                  value={form[name]}
-                  onChange={handleChange}
-                  placeholder={placeholder}
-                  required
-                  className="w-full px-5 py-3 bg-black/60 text-yellow-100 placeholder-yellow-300 border border-yellow-400/40 rounded-lg focus:ring-2 focus:ring-yellow-400 outline-none transition-all duration-300"
-                />
-              </motion.div>
+              { name: "name", type: "text", placeholder: t.name, icon: <User size={16}/>, full: true },
+              { name: "email", type: "email", placeholder: t.email, icon: <Mail size={16}/>, full: true },
+              { name: "password", type: "password", placeholder: t.pass, icon: <Lock size={16}/>, full: true },
+              { name: "department", type: "text", placeholder: t.dept, icon: <BookOpen size={16}/>, full: false },
+              { name: "year", type: "number", placeholder: t.year, icon: <GraduationCap size={16}/>, full: false },
+              { name: "phone", type: "number", placeholder: t.phone, icon: <Phone size={16}/>, full: true },
+            ].map(({ name, type, placeholder, icon, full }) => (
+              <div key={name} className={`${full ? 'md:col-span-2' : 'md:col-span-1'} space-y-1`}>
+                <div className="relative group">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-amber-500 transition-colors">
+                    {icon}
+                  </div>
+                  <input
+                    name={name}
+                    type={type}
+                    value={form[name]}
+                    onChange={handleChange}
+                    placeholder={placeholder}
+                    required
+                    className="w-full pl-12 pr-6 py-4 bg-white/[0.03] text-slate-200 placeholder-slate-600 border border-white/5 rounded-2xl outline-none focus:border-amber-500/50 focus:bg-white/[0.05] focus:ring-4 focus:ring-amber-500/5 transition-all duration-300 font-medium"
+                  />
+                </div>
+              </div>
             ))}
 
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02, backgroundColor: "#d97706" }}
+              whileTap={{ scale: 0.98 }}
               type="submit"
-              className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-lg shadow-lg mt-4 transition-all duration-300"
+              className="md:col-span-2 w-full bg-amber-600 text-black font-black uppercase tracking-[0.2em] text-xs py-5 rounded-2xl shadow-xl mt-4 flex items-center justify-center gap-2 group"
             >
-              Register
+              {t.btn} <Sparkles size={16} className="group-hover:rotate-12 transition-transform" />
             </motion.button>
           </form>
+
+          <p className="text-center mt-8 text-slate-500 text-xs font-bold">
+            {t.footer} <span onClick={() => navigate('/login')} className="text-amber-500 cursor-pointer hover:underline decoration-amber-500/30 underline-offset-4">{t.link}</span>
+          </p>
         </div>
       </motion.div>
 
-      {/* RIGHT SIDE — IMAGE */}
-      <motion.div
-        className="flex-1 relative order-1 md:order-2 h-64 md:h-auto"
-        initial={{ x: 80, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <img
-          src={heroImage}
-          alt="Orthodox Students"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="absolute bottom-6 md:bottom-12 left-6 md:left-12 text-yellow-200 max-w-xs md:max-w-md">
-          <h3 className="text-2xl md:text-3xl font-semibold mb-3">
-            Welcome to Orthodox Student Platform
-          </h3>
-          <p className="text-yellow-100 text-sm md:text-base leading-relaxed">
-            Unite faith and knowledge. Join a growing community of Orthodox
-            students sharing ideas, wisdom, and growth.
-          </p>
+      {/* RIGHT SIDE — IMMERSIVE VISUAL */}
+      <motion.div className="flex-1 relative order-1 md:order-2 h-80 md:h-auto">
+        <img src={heroImage} alt="Orthodox Heritage" className="w-full h-full object-cover grayscale-[0.3] brightness-[0.7]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-transparent to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-transparent" />
+
+        <div className="absolute bottom-12 left-12 right-12">
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={lang}
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -20, opacity: 0 }}
+              className="space-y-4"
+            >
+              <div className="h-[1px] w-20 bg-amber-500" />
+              <h3 className="text-4xl md:text-5xl font-black text-white leading-tight uppercase tracking-tighter">
+                {t.heroTitle} <br /> 
+                <span className="text-amber-500 italic font-light">{t.heroSub}</span>
+              </h3>
+              <p className="text-slate-400 text-sm md:text-lg max-w-sm leading-relaxed font-medium">
+                {t.heroDesc}
+              </p>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </motion.div>
     </div>
