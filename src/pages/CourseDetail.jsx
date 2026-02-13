@@ -45,7 +45,7 @@ export default function CourseDetail() {
     const fetchCourseAndLessons = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`http://localhost:5000/api/lessons/${id}`);
+        const res = await axios.get(`https://ortho-backend-8eqv.onrender.com/api/lessons/${id}`);
         const lessonsData = res.data;
 
         if (!lessonsData || lessonsData.length === 0) {
