@@ -49,7 +49,7 @@ export default function Quize() {
       try {
         setLoading(true);
         setError("");
-        const res = await axios.get(`http://localhost:5000/api/quizzes/${lessonId}`);
+        const res = await axios.get(`https://ortho-backend-8eqv.onrender.com/api/quizzes/${lessonId}`);
         setQuiz(res.data);
       } catch (err) {
         setError(t.error);
