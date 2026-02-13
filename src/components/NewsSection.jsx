@@ -14,7 +14,7 @@ export default function NewsSection() {
   const [newComment, setNewComment] = useState({});
   const [search, setSearch] = useState("");
   const [visibleCount, setVisibleCount] = useState(2);
-  const backendUrl = "http://localhost:5000/api";
+  const backendUrl = "https://ortho-backend-8eqv.onrender.com/api";
 
   const content = {
     EN: {
@@ -196,4 +196,5 @@ export default function NewsSection() {
       </div>
     </section>
   );
+
 }
