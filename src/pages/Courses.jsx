@@ -37,7 +37,7 @@ export default function Courses() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/courses");
+        const res = await axios.get("https://ortho-backend-8eqv.onrender.com/api/courses");
         setCourses(res.data);
       } catch (err) {
         setError(t.error);
